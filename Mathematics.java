@@ -16,6 +16,7 @@ public class Mathematics {
 		this.input.display();
 	}
 	
+	//convert input string into a stack of numbers and operators
 	public Stack parseString2Stack(String input)
 	{
 		Stack result = new Stack();
@@ -57,6 +58,7 @@ public class Mathematics {
 		return result;
 	}
 	
+	//define the priority of an operator
 	private int op_preced(char op)
 	{
 		int op_priority = 0;
@@ -84,44 +86,57 @@ public class Mathematics {
 		return op_priority;
 	}
 	
+	//check whether a char is a number
+	//period is considered as legal as it may be a float
 	private Boolean isNumber(char num)
 	{
 		String numericString = "0123456789.";
-		if (numericString.indexOf(num) > 0)
+		if (numericString.indexOf(num) < 0)
 		{
-			return true;
+			return false;
 		}
-		return false; 
+		return true; 
 	}
 	
+	//check whether a string is a number, including negative value
 	private Boolean isNumber(String num)
 	{
-		int n = 0;
 		if (num.charAt(0) == '-')
 		{
-			n++;
-		}
-		for (int i = n; i < num.length(); i++)
-		{
-			if (!isNumber(num.charAt(i)))
+			if (num.length() < 2)
 			{
 				return false;
+			}
+			for (int i = 1; i < num.length(); i++)
+			{
+				if (!isNumber(num.charAt(i)))
+				{
+					return false;
+				}
+			}
+		} else
+		{
+			for (int i = 0; i < num.length(); i++)
+			{
+				if (!isNumber(num.charAt(i)))
+				{
+					return false;
+				}
 			}
 		}
 		return true;
 	}
 	
+	//get the result
 	public String getResult() throws Exception
 	{
 		String currNumber = "";
 		while (this.input.peek() != null)
 		{
 			String temp = this.input.pop();
-			System.out.println(temp);
-			if (temp == "(")
+			if (temp.charAt(0) == '(')
 				//meet "(" start a new calculating operation
 			{
-				System.out.println(temp);
 				parseLeftParenthesis();
 			}
 			else if (isNumber(temp))
@@ -131,7 +146,7 @@ public class Mathematics {
 			}
 			else	//meet a arithmetic operator
 			{
-				if (temp != "^")
+				if (temp.charAt(0) != '^')
 				{
 					while ((oprand.peek() != null) && (op_preced(temp.charAt(0)) <= op_preced(oprand.peek().charAt(0))))
 					{
@@ -156,13 +171,16 @@ public class Mathematics {
 		return currNumber;
 	}
 
+	//if there is a left parenthesis, go to a new instance
 	public void parseLeftParenthesis() throws Exception
 	{
 		String currNumber = "";
-		while (this.input.peek() != ")")
+		Stack queue = new Stack();
+		Stack oprand = new Stack();
+		while (this.input.peek().charAt(0) != ')')
 		{
 			String temp = this.input.pop();
-				if (temp == "(")
+			if (temp.charAt(0) == '(')
 				//meet "(" start a new calculating operation
 			{
 				parseLeftParenthesis();
@@ -174,10 +192,8 @@ public class Mathematics {
 			}
 			else	//meet a arithmetic operator
 			{
-				if (temp != "^")
+				if (temp.charAt(0) != '^')
 				{
-					System.out.println(oprand.peek());
-					System.out.println(queue.peek());
 					while ((oprand.peek() != null) && (op_preced(temp.charAt(0)) <= op_preced(oprand.peek().charAt(0))))
 					{
 						String rightNum = currNumber;
@@ -202,6 +218,7 @@ public class Mathematics {
 		this.input.push(currNumber);
 	}
 	
+	//calculate and return the result of two numbers and an operator
 	private String goOperation(String leftNum, String rightNum, char op)
 	{
 		double leftNumber = Double.parseDouble(leftNum);

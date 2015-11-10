@@ -45,7 +45,6 @@ public class LinkedList {
 	}
 	
 	public void addEnd(String value) {
-		this.count++;
 		if (head == null) {
 			this.addFront(value);
 		} else {
@@ -55,6 +54,7 @@ public class LinkedList {
 				currNode = currNode.getNextNode();
 			}
 			currNode.setNextNode(n);
+			this.count++;
 		}
 	}
 	

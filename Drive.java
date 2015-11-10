@@ -6,10 +6,9 @@ public class Drive {
 		Mathematics one = new Mathematics(input);
 		one.displayInput();
 		System.out.print(one.getResult());
-		Stack s1 = new Stack();
-		System.out.println(s1.peek());
-		Node n1 = new Node();
-		System.out.println(n1.getPayload());
+		String input1 = "3*3^3/(1+2+(2+4))";
+		Mathematics two = new Mathematics(input1);
+		two.displayInput();
+		System.out.println(two.getResult());		
 	}
-
 }
